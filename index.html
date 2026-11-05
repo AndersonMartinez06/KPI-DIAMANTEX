@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control de Stock DIAMANTEX</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<style>
+  :root { --bg:#0b1120; --card:#131c2e; --line:#26324a; --ink:#e8edf5; --mut:#94a3b8; --blue:#60a5fa; --green:#34d399; --amber:#fbbf24; --red:#f87171; }
+  body { background:radial-gradient(1200px 500px at 80% -10%, #1b2c4d 0%, var(--bg) 60%); background-color:var(--bg); color:var(--ink); font-family:"Segoe UI",system-ui,sans-serif; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 12px 30px rgba(0,0,0,.35); transition:transform .2s, border-color .2s; }
+  .card:hover { transform:translateY(-3px); border-color:#3b4d70; }
+  button.card { display:flex; flex-direction:column; justify-content:flex-start; }
+  .mut { color:var(--mut); }
+  .bar { height:8px; border-radius:6px; background:#22304a; overflow:hidden; }
+  .bar > i { display:block; height:100%; width:0; border-radius:6px; transition:width 1.2s ease; }
+  .chip { border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-size:13px; color:var(--mut); transition:all .15s; }
+  .chip[aria-pressed="true"] { background:var(--blue); border-color:var(--blue); color:#0b1120; font-weight:600; }
+  .chip:focus-visible, button:focus-visible, input:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .detail { display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s; }
+  .detail > span { overflow:hidden; display:block; min-height:0; }
+  [aria-expanded="true"] .detail { grid-template-rows:1fr; }
+  [aria-expanded="true"] .chev { transform:rotate(180deg); }
+  .chev { transition:transform .2s; }
+  svg text { font-family:"Segoe UI",system-ui,sans-serif; }
+  input[type=range] { accent-color:var(--blue); }
+  @media (prefers-reduced-motion: reduce) { .bar > i, .card, .detail, .chev { transition:none; } }
+</style>
+</head>
+<body class="min-h-screen">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="text-xs font-semibold tracking-widest" style="color:var(--blue)">ALFALION INVESTMENT · CONTROL DE QUIEBRE DE STOCK</p>
+      <h1 class="text-3xl sm:text-4xl font-bold mt-1">STARHOME - DIAMANTEX</h1>
+      <p class="mut mt-1">904 pedidos · 1,762 unidades · 1-sep al 2-nov-2026</p>
+    </div>
+    <div class="flex flex-wrap gap-2" role="group" aria-label="Base de cálculo">
+      <button class="chip" data-base="ref" aria-pressed="true">Modelo de referencia</button>
+      <button class="chip" data-base="cor" aria-pressed="false">Base corregida (sin domingos)</button>
+    </div>
+  </header>
+
+  <section class="grid gap-4 md:grid-cols-3" aria-label="Resultados">
+    <article class="card p-5">
+      <p class="mut text-sm">Entregas exitosas (DELIVERED)</p>
+      <p class="text-5xl font-bold mt-2" style="color:var(--green)">73.9%</p>
+      <p class="mut text-sm mt-1">668 pedidos · 1,318 unidades</p>
+      <div class="bar mt-4"><i data-w="73.9" style="background:var(--green)"></i></div>
+      <p class="mut text-sm mt-5">Distribución de los 904 pedidos</p>
+      <div class="flex gap-0.5 mt-2 h-4 rounded overflow-hidden" role="img" aria-label="73.9% entregados, 22.3% rechazados y fallidos, 3.8% en tránsito">
+        <span style="width:73.9%;background:var(--green)"></span><span style="width:22.3%;background:var(--red)"></span><span style="width:3.8%;background:var(--amber)"></span>
+      </div>
+      <dl class="mt-4 space-y-2 text-sm">
+        <div class="flex justify-between"><dt><span style="color:var(--green)">●</span> Entregados</dt><dd class="font-semibold">668</dd></div>
+        <div class="flex justify-between"><dt><span style="color:var(--red)">●</span> Rechazados y fallidos</dt><dd class="font-semibold">202</dd></div>
+        <div class="flex justify-between"><dt><span style="color:var(--amber)">●</span> En tránsito</dt><dd class="font-semibold">34</dd></div>
+      </dl>
+    </article>
+    <article class="card p-5">
+      <p class="mut text-sm">Rechazos y fallidos</p>
+      <p class="text-5xl font-bold mt-2" style="color:var(--red)">22.3%</p>
+      <p class="mut text-sm mt-1">202 pedidos · 384 unidades · Meta: 12.8%</p>
+      <div class="bar mt-4"><i data-w="22.3" style="background:var(--red)"></i></div>
+      <dl class="mt-4 space-y-2 text-sm">
+        <div class="flex justify-between"><dt>Cancelados</dt><dd class="font-semibold">13.4%</dd></div>
+        <div class="bar" style="height:5px"><i data-w="13.4" style="background:var(--red)"></i></div>
+        <div class="flex justify-between"><dt>No responde</dt><dd class="font-semibold">6.9%</dd></div>
+        <div class="bar" style="height:5px"><i data-w="6.9" style="background:var(--red)"></i></div>
+        <div class="flex justify-between"><dt>Rechazados</dt><dd class="font-semibold">1.5%</dd></div>
+        <div class="bar" style="height:5px"><i data-w="1.5" style="background:var(--red)"></i></div>
+        <div class="flex justify-between"><dt>Anulados</dt><dd class="font-semibold">0.6%</dd></div>
+        <div class="bar" style="height:5px"><i data-w="0.6" style="background:var(--red)"></i></div>
+      </dl>
+    </article>
+    <article class="card p-5">
+      <p class="mut text-sm">Pedidos en tránsito (PENDING_DELIVERY)</p>
+      <p class="text-5xl font-bold mt-2" style="color:var(--amber)">3.8%</p>
+      <p class="mut text-sm mt-1">34 pedidos · 60 unidades</p>
+      <div class="bar mt-4"><i data-w="3.8" style="background:var(--amber)"></i></div>
+      <p class="mut text-sm mt-5">Situación de los 34 pedidos</p>
+      <dl class="mt-3 space-y-2 text-sm">
+        <div class="flex justify-between"><dt>En agencia</dt><dd class="font-semibold">13</dd></div>
+        <div class="flex justify-between"><dt>En ruta</dt><dd class="font-semibold">7</dd></div>
+        <div class="flex justify-between"><dt>Recogidos</dt><dd class="font-semibold">7</dd></div>
+        <div class="flex justify-between"><dt>Marcados para devolución</dt><dd class="font-semibold" style="color:var(--red)">7</dd></div>
+      </dl>
+    </article>
+  </section>
+
+  <section aria-labelledby="t-inv" class="space-y-4">
+    <h2 id="t-inv" class="text-xl font-semibold">Inventario y puntos de reorden</h2>
+    <div class="grid gap-4 lg:grid-cols-2">
+      <button class="card p-5 text-left w-full" aria-expanded="false" data-toggle>
+        <span class="flex justify-between items-start"><span class="mut text-sm">Líquido · Stock de Seguridad · 3 días de entrega</span><span class="chev mut" aria-hidden="true">▾</span></span>
+        <span class="block text-5xl font-bold mt-2" style="color:var(--red)"><span id="v-ss">41</span> <span class="text-lg font-normal mut">uds.</span></span>
+        <span class="detail mt-2"><span class="mut text-sm">Colchón operativo para absorber la variación de la demanda mientras llega el lote.</span></span>
+      </button>
+      <button class="card p-5 text-left w-full" aria-expanded="false" data-toggle>
+        <span class="flex justify-between items-start"><span class="mut text-sm">Líquido · Punto de Pedido (ROP)</span><span class="chev mut" aria-hidden="true">▾</span></span>
+        <span class="block text-5xl font-bold mt-2" style="color:var(--amber)">134 <span class="text-lg font-normal mut">uds.</span></span>
+        <span class="detail mt-2"><span class="mut text-sm">Al llegar a este nivel se emite la orden al proveedor. Cubre unos 4 días de demanda promedio.</span></span>
+      </button>
+    </div>
+    <div class="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <div class="card p-4"><p class="mut text-sm">Stickers · 2 días</p><p class="text-3xl font-bold mt-1">95</p></div>
+      <div class="card p-4"><p class="mut text-sm">Envases · 2 días</p><p class="text-3xl font-bold mt-1">95</p></div>
+      <div class="card p-4"><p class="mut text-sm">Cajas · 1 día</p><p class="text-3xl font-bold mt-1" id="v-cajas">55</p></div>
+      <div class="card p-4"><p class="mut text-sm">Producto terminado · 4 días</p><p class="text-3xl font-bold mt-1">173</p></div>
+    </div>
+  </section>
+
+  <section class="card p-5" aria-labelledby="t-sim">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div><h2 id="t-sim" class="text-xl font-semibold">Simulador de diente de sierra: líquido</h2><p class="mut text-sm">Lote Q = 300 uds. · Demanda de <span id="v-d">30.9</span> uds. por día operativo</p></div>
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Escenario">
+        <button class="chip" data-scn="base" aria-pressed="true">Esperado</button>
+        <button class="chip" data-scn="lt6" aria-pressed="false">Proveedor: 6 días</button>
+        <button class="chip" data-scn="lt8" aria-pressed="false">Proveedor: 8 días</button>
+        <button class="chip" data-scn="x3" aria-pressed="false">Campaña: demanda x3</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto mt-4"><svg id="chart" viewBox="0 0 900 380" class="w-full min-w-[640px]" role="img" aria-label="Nivel de stock de líquido en el tiempo, con stock máximo, punto de pedido y stock de seguridad"></svg></div>
+    <div class="flex flex-wrap items-center gap-4 mt-2">
+      <button id="play" class="chip" style="color:var(--ink)">▶ Reproducir</button>
+      <input id="day" type="range" min="0" max="20" step="0.05" value="0" class="flex-1 min-w-[180px]" aria-label="Día operativo">
+    </div>
+    <div class="grid gap-3 grid-cols-2 lg:grid-cols-4 mt-4 text-sm">
+      <div><p class="mut">Día del ciclo</p><p class="text-2xl font-bold" id="r-day">0.0</p></div>
+      <div><p class="mut">Stock</p><p class="text-2xl font-bold" id="r-stock">341</p></div>
+      <div><p class="mut">Estado</p><p class="text-2xl font-bold" id="r-state">Normal</p></div>
+      <div><p class="mut">Primera orden y llegada</p><p class="text-2xl font-bold" id="r-ev">-</p></div>
+    </div>
+    <p id="r-note" class="text-sm mt-3" role="status"></p>
+  </section>
+
+  <section aria-labelledby="t-risk" class="space-y-4">
+    <h2 id="t-risk" class="text-xl font-semibold">Alertas de quiebre: las 4 peores situaciones</h2>
+    <div class="grid gap-4 md:grid-cols-2" id="risks"></div>
+    <p class="mut text-xs">Impactos calculados con ROP de 134 uds. y demanda de 32.6 uds. por día. El reporte no registra plazos reales, mermas ni costos: retraso y merma son simulaciones.</p>
+  </section>
+
+  <footer class="mut text-xs border-t pt-4" style="border-color:var(--line)">Modelo de referencia: 57 días con actividad, que incluyen 3 domingos. Base corregida: 54 días de lunes a sábado, con fechas convertidas a hora de Lima, conversión pendiente de confirmar. Nivel de servicio: 95%.</footer>
+</main>
+
+<script>
+const BASES = {
+  ref: { d:30.91, ss:41, max:341, cajas:55 },
+  cor: { d:32.63, ss:36, max:336, cajas:54 }
+};
+const ROP = 134, Q = 300, DAYS = 20;
+const RISKS = [
+  ['Retraso del proveedor de líquido','A 6 días faltan 62 uds.; a 8 días, 127 uds.','Calificar un segundo proveedor, exigir confirmación en 24 horas y subir el disparador a 247 uds. ante un retraso.'],
+  ['Explosión de demanda en campaña','A 98 uds. por día faltan 160 uds.; un lote de 300 dura 3 días.','Avisar cada campaña con 4 días de anticipación, preparar stock dedicado y frenar la pauta si no hay lote confirmado.'],
+  ['Colapso por devoluciones (TO_RETURN)','370 uds. en devolución; si 44 en tránsito se cuentan como stock, las 134 son en realidad 90.','Contar solo el stock disponible, separar lo que está en tránsito e inspección, y conciliar las sacas cada semana.'],
+  ['Mermas de envasado','Con 5% de merma, cada lote pierde 15 uds.; perder 36 uds. agota el colchón.','Medir la merma por lote, inspeccionar al recibir y compensar: con 5%, ROP de 142 y lote de 316 uds.']
+];
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const W = 900, H = 380, L = 30, R = 145, T = 16, B = 46;
+const X = d => L + d / DAYS * (W - L - R);
+const Y = s => T + (1 - s / 380) * (H - T - B);
+let base = 'ref', scn = 'base', sim, day = 0, timer = null;
+
+function simulate() {
+  const p = BASES[base];
+  const lt = scn === 'lt6' ? 6 : scn === 'lt8' ? 8 : 3;
+  const d = scn === 'x3' ? p.d * 3 : p.d;
+  const dt = 0.01, pts = [], ev = [];
+  let s = p.max, pending = null, short = 0, firstShort = null, firstZero = null;
+  for (let i = 0; i <= DAYS / dt; i++) {
+    const t = i * dt;
+    if (pending !== null && t >= pending) { pts.push([t, s]); ev.push({ type:'in', t, s }); s += Q; pending = null; }
+    if (i % 5 === 0 || (i && pts.length && pts[pts.length - 1][0] === t)) pts.push([t, s]);
+    s -= d * dt;
+    if (s < 0) { short -= s; if (firstZero === null) firstZero = t; s = 0; }
+    if (s <= ROP && pending === null) { ev.push({ type:'out', t, s:ROP }); pending = t + lt; }
+    if (ev.filter(e => e.type === 'in').length === 1 && firstShort === null) firstShort = short;
+  }
+  return { pts, ev, firstShort: firstShort || 0, firstZero, lt, d, p };
+}
+function stockAt(t) {
+  let prev = sim.pts[0];
+  for (const q of sim.pts) {
+    if (q[0] > t) return prev[1] + (q[1] - prev[1]) * (t - prev[0]) / (q[0] - prev[0] || 1);
+    prev = q;
+  }
+  return prev[1];
+}
+function el(tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function draw() {
+  const svg = $('chart'), p = sim.p;
+  svg.innerHTML = '';
+  const defs = el('defs', {}), clip = el('clipPath', { id:'reveal' });
+  clip.appendChild(el('rect', { id:'clipR', x:0, y:0, width:X(day), height:H }));
+  defs.appendChild(clip); svg.appendChild(defs);
+  sim.ev.filter(e => e.type === 'out').forEach(o => {
+    const a = sim.ev.find(e => e.type === 'in' && e.t > o.t);
+    const end = a ? a.t : DAYS;
+    svg.appendChild(el('rect', { x:X(o.t), y:T, width:X(end) - X(o.t), height:H - T - B, fill:'#fbbf24', opacity:.08 }));
+  });
+  for (let d = 0; d <= DAYS; d += 2) {
+    svg.appendChild(el('text', { x:X(d), y:H - 26, fill:'#94a3b8', 'font-size':13, 'text-anchor':'middle' }, d));
+  }
+  svg.appendChild(el('text', { x:(L + W - R) / 2, y:H - 6, fill:'#94a3b8', 'font-size':13, 'text-anchor':'middle' }, 'Días operativos'));
+  [[p.max,'Stock Máximo','#60a5fa'],[ROP,'ROP','#fbbf24'],[p.ss,'Stock de Seguridad','#f87171']].forEach(([v, name, c]) => {
+    svg.appendChild(el('line', { x1:L, x2:W - R, y1:Y(v), y2:Y(v), stroke:c, 'stroke-dasharray':'6 5', opacity:.8 }));
+    svg.appendChild(el('text', { x:W - R + 8, y:Y(v) - 3, fill:c, 'font-size':12, 'font-weight':600 }, name));
+    svg.appendChild(el('text', { x:W - R + 8, y:Y(v) + 12, fill:c, 'font-size':12, 'font-weight':600 }, v + ' uds.'));
+  });
+  svg.appendChild(el('line', { x1:L, x2:W - R, y1:Y(0), y2:Y(0), stroke:'#26324a' }));
+  const line = sim.pts.map(q => X(q[0]).toFixed(1) + ',' + Y(q[1]).toFixed(1)).join(' ');
+  svg.appendChild(el('polyline', { points:line, fill:'none', stroke:'#64748b', 'stroke-width':2 }));
+  svg.appendChild(el('polyline', { points:line, fill:'none', stroke:'#60a5fa', 'stroke-width':3, 'clip-path':'url(#reveal)' }));
+  const o1 = sim.ev.find(e => e.type === 'out'), a1 = sim.ev.find(e => e.type === 'in');
+  [[o1,'#fbbf24','Emisión del pedido'],[a1,'#f87171','Recepción del lote']].forEach(([e, c, name], i) => {
+    if (!e) return;
+    const y = Y(e.s);
+    svg.appendChild(el('circle', { cx:X(e.t), cy:y, r:6, fill:c, stroke:'#0b1120', 'stroke-width':2 }));
+    const yt = i === 0 ? y - 34 : y - 44;
+    const left = i === 0 && e.t > 4;
+    const anchor = left ? 'end' : 'start', dx = left ? -10 : 10;
+    const halo = { stroke:'#131c2e', 'stroke-width':4, 'paint-order':'stroke' };
+    svg.appendChild(el('text', { x:X(e.t) + dx, y:yt, fill:'#e8edf5', 'font-size':13, 'font-weight':600, 'text-anchor':anchor, ...halo }, name));
+    svg.appendChild(el('text', { x:X(e.t) + dx, y:yt + 16, fill:c, 'font-size':13, 'font-weight':600, 'text-anchor':anchor, ...halo }, 'Día ' + e.t.toFixed(1)));
+  });
+  svg.appendChild(el('circle', { id:'head', r:7, fill:'#e8edf5', stroke:'#60a5fa', 'stroke-width':3, cx:X(day), cy:Y(stockAt(day)) }));
+}
+function update() {
+  const s = stockAt(day), p = sim.p;
+  $('clipR').setAttribute('width', X(day));
+  $('head').setAttribute('cx', X(day)); $('head').setAttribute('cy', Y(s));
+  $('day').value = day;
+  $('r-day').textContent = day.toFixed(1);
+  $('r-stock').textContent = Math.round(s);
+  const st = s <= 0 ? ['Quiebre','var(--red)'] : s <= p.ss ? ['Riesgo','var(--red)'] : s <= ROP ? ['Alerta ROP','var(--amber)'] : ['Normal','var(--green)'];
+  $('r-state').textContent = st[0]; $('r-state').style.color = st[1];
+}
+function refresh() {
+  stop();
+  sim = simulate();
+  const p = sim.p, o = sim.ev.find(e => e.type === 'out'), a = sim.ev.find(e => e.type === 'in');
+  $('v-ss').textContent = p.ss; $('v-cajas').textContent = p.cajas;
+  $('v-d').textContent = (Math.round(sim.d * 10) / 10).toFixed(1);
+  $('r-ev').textContent = 'Día ' + o.t.toFixed(1) + ' → ' + a.t.toFixed(1);
+  const miss = Math.round(sim.firstShort);
+  $('r-note').textContent = miss > 0
+    ? 'El stock se agota antes de la llegada del lote: faltan ' + miss + ' uds. en el primer ciclo.'
+    : 'Con la demanda esperada, el lote llega antes del quiebre. El modelo reduce el riesgo, pero no lo elimina.';
+  $('r-note').style.color = miss > 0 ? 'var(--red)' : 'var(--mut)';
+  draw(); update();
+}
+function stop() { if (timer) { clearInterval(timer); timer = null; } $('play').textContent = '▶ Reproducir'; }
+$('play').addEventListener('click', () => {
+  if (timer) return stop();
+  if (day >= DAYS) day = 0;
+  $('play').textContent = '❚❚ Pausar';
+  timer = setInterval(() => {
+    day = Math.min(DAYS, Math.round((day + 0.05) * 100) / 100);
+    update();
+    if (day >= DAYS) stop();
+  }, 40);
+});
+$('day').addEventListener('input', e => { stop(); day = +e.target.value; update(); });
+function group(attr, cb) {
+  document.querySelectorAll('[' + attr + ']').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[' + attr + ']').forEach(x => x.setAttribute('aria-pressed', x === b));
+    cb(b.getAttribute(attr));
+  }));
+}
+group('data-base', v => { base = v; day = 0; refresh(); });
+group('data-scn', v => { scn = v; day = 0; refresh(); });
+$('risks').innerHTML = RISKS.map((r, i) => `
+  <article class="card">
+    <button class="p-5 w-full text-left" aria-expanded="false" data-toggle>
+      <span class="flex justify-between gap-3"><span class="font-semibold"><span style="color:var(--red)">●</span> ${i + 1}. ${r[0]}</span><span class="chev mut" aria-hidden="true">▾</span></span>
+      <span class="block mut text-sm mt-2">${r[1]}</span>
+      <span class="detail"><span><span class="block text-sm mt-3"><strong style="color:var(--green)">Solución táctica:</strong> ${r[2]}</span></span></span>
+    </button>
+  </article>`).join('');
+document.querySelectorAll('[data-toggle]').forEach(b => b.addEventListener('click', () => b.setAttribute('aria-expanded', b.getAttribute('aria-expanded') !== 'true')));
+refresh();
+requestAnimationFrame(() => setTimeout(() => document.querySelectorAll('[data-w]').forEach(i => i.style.width = i.dataset.w + '%'), 100));
+</script>
+</body>
+</html>
